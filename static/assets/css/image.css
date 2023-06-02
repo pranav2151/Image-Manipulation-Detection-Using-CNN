@@ -1,0 +1,16 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  background-image: url("../img/background2.jpg");
+  font-family: "Inter", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container1 h3 {
+  margin-top: 10px;
+  margin-left: 10px;
+}

@@ -45,7 +45,7 @@ class FID:
       else:
          confidence = f'{(y_pred[0][0]) * 100:0.2f}'
       return (prediction, confidence)
-      #"""
+ 
 
    def genMask(self,file_path):
       segmenter=initSegmenter()
@@ -154,61 +154,3 @@ class FID:
       na=self.noise_analysis(file_path, 90, intensity)
       na.save(resaved_filename, 'JPEG')
       return na
-
-# def ela_denoise_img(path, quality):
-#     #denoise
-#     global resaved_filename
-#     temp_filename = resaved_filename
-    
-#     image = Image.open(path).convert('RGB')
-#     image.save(temp_filename, 'JPEG', quality = quality)
-#     temp_image = Image.open(temp_filename)
-    
-#     img=skimage.img_as_float(image) #converting image as float
-
-
-#     sigma_est=estimate_sigma(img,multichannel=True,average_sigmas=True)  #Noise estimation
-
-#     # Denoising using Bayes
-#     img_bayes=denoise_wavelet(img,method='BayesShrink',mode='soft',wavelet_levels=3,
-#                           wavelet='coif5',multichannel=True,convert2ycbcr=True,rescale_sigma=True)
-
-
-#     #Denoising using Visushrink
-#     img_visushrink=denoise_wavelet(img,method='VisuShrink',mode='soft',sigma=sigma_est/3,wavelet_levels=5,
-#     wavelet='coif5',multichannel=True,convert2ycbcr=True,rescale_sigma=True)
-    
-#     from keras.preprocessing.image import array_to_img
-#     img_denoised=array_to_img(img_bayes)
-    
-#     #ela 
-#     ela_image = ImageChops.difference(img_denoised, temp_image)
-    
-#     extrema = ela_image.getextrema()
-#     max_diff = max([ex[1] for ex in extrema])
-#     if max_diff == 0:
-#         max_diff = 1
-#     scale = 255.0 / max_diff
-#     ela_image = ImageEnhance.Brightness(ela_image).enhance(scale)
-#     return ela_image
-
-# def GLCM(imgRGB, threshold=192):
-#   imgYCbCr = imgRGB.convert('YCbCr')
-#   imgYCbCr = np.array(imgYCbCr)
-#   Cb = Scharr_Operator(imgYCbCr[:,:,1], threshold)
-#   Cr = Scharr_Operator(imgYCbCr[:,:,2], threshold)
-#   Cb_GLCM = feature.texture.greycomatrix(Cb, [1],
-#                                          [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4], 
-#                                          levels=threshold)[:, :, 0, :]
-#   Cr_GLCM = feature.texture.greycomatrix(Cr, [1],
-#                                          [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4], 
-#                                          levels=threshold)[:, :, 0, :]
-#   GLCM_feature = np.concatenate((Cb_GLCM,Cr_GLCM),axis=2)
-#   return GLCM_feature
-
-# def Scharr_Operator(imgYCbCr, threshold=192):
-#     x = cv.Scharr(imgYCbCr, cv.CV_16S, 1, 0)
-#     y = cv.Scharr(imgYCbCr, cv.CV_16S, 0, 1)
-#     dst = cv.addWeighted(abs(x), 0.5, abs(y), 0.5, 0)
-#     dst = np.clip(dst,0,threshold-1)
-#     return dst 

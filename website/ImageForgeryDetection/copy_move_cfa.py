@@ -1,5 +1,3 @@
-# Implementation derived from vasiliauskas.agnius@gmail.com
-
 import sys
 from PIL import Image, ImageFilter, ImageDraw
 import operator as op

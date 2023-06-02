@@ -24,7 +24,6 @@ def detect(input, blockSize=32):
 
     imgwidth, imgheight = im.size
 
-    # break up image into NxN blocks, N = blockSize
     for i in range(0,imgheight,blockSize):
         for j in range(0,imgwidth,blockSize):
             box = (j, i, j+blockSize, i+blockSize)

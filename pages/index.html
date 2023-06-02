@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>Home</title>
+    <meta name="description" content="Forgery Detection web app" />
+    <link
+      rel="stylesheet"
+      href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&family=Josefin+Sans&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="../static/assets/css/main.css" />
+  </head>
+  <style></style>
+
+  <body>
+    <div class="main">
+      <section class="left-panel">
+        <h1 class="title">VisualTruth</h1>
+        <p class="desc">
+          From Doubt to Certainty: Revolutionizing Image Authentication with our
+          State-of-the-Art Manipulation Detection System.
+        </p>
+        <button class="explore" onclick="redirectToImagePage()">Explore</button>
+      </section>
+      <section class="right-panel">
+        <div class="image">
+          <img src="../static/img/detect area.png" alt="" />
+          <p>Area Detection</p>
+        </div>
+        <div class="image">
+          <img src="../static/img/edgemap.png" alt="" />
+          <p>Edge Map</p>
+        </div>
+        <div class="image">
+          <img src="../static/img/ela.png" alt="" />
+          <p>ELA</p>
+        </div>
+        <div class="image">
+          <img src="../static/img/noise.png" alt="" />
+          <p>Noise Analysis</p>
+        </div>
+      </section>
+    </div>
+    <script>
+      function redirectToImagePage() {
+        window.location.href = "./image";
+      }
+    </script>
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
