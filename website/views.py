@@ -23,8 +23,6 @@ from json import dumps
 from PIL import Image
 from PIL.ExifTags import TAGS
 
-# Create your views here.
-
 fileurl = ''
 inputImageUrl = ''
 result = {}
@@ -52,34 +50,6 @@ def getMetaData(path):
     if "Metadata" in infoDict.keys():
         del infoDict["Metadata"]
     # CODE for metadata ends
-
-
-def get_video_metadata(filename):
-    result = subprocess.Popen(['hachoir-metadata', filename, '--raw', '--level=3'],
-                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    results = result.stdout.read().decode('utf-8').split('\r\n')
-
-    properties = {}
-
-    for item in results:
-
-        if item.startswith('- duration: '):
-            duration = item.lstrip('- duration: ')
-            if '.' in duration:
-                t = datetime.datetime.strptime(item.lstrip('- duration: '), '%H:%M:%S.%f')
-            else:
-                t = datetime.datetime.strptime(item.lstrip('- duration: '), '%H:%M:%S')
-            seconds = (t.microsecond / 1e6) + t.second + (t.minute * 60) + (t.hour * 3600)
-            properties['duration'] = round(seconds)
-
-        if item.startswith('- width: '):
-            properties['width'] = int(item.lstrip('- width: '))
-
-        if item.startswith('- height: '):
-            properties['height'] = int(item.lstrip('- height: '))
-
-    return properties
 
 
 def index(request):
