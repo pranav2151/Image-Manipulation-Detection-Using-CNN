@@ -55,12 +55,85 @@ def getMetaData(path):
         del infoDict["Metadata"]
     # CODE for metadata ends
 
+
+def get_video_metadata(filename):
+    result = subprocess.Popen(['hachoir-metadata', filename, '--raw', '--level=3'],
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    results = result.stdout.read().decode('utf-8').split('\r\n')
+
+    properties = {}
+
+    for item in results:
+
+        if item.startswith('- duration: '):
+            duration = item.lstrip('- duration: ')
+            if '.' in duration:
+                t = datetime.datetime.strptime(item.lstrip('- duration: '), '%H:%M:%S.%f')
+            else:
+                t = datetime.datetime.strptime(item.lstrip('- duration: '), '%H:%M:%S')
+            seconds = (t.microsecond / 1e6) + t.second + (t.minute * 60) + (t.hour * 3600)
+            properties['duration'] = round(seconds)
+
+        if item.startswith('- width: '):
+            properties['width'] = int(item.lstrip('- width: '))
+
+        if item.startswith('- height: '):
+            properties['height'] = int(item.lstrip('- height: '))
+
+    return properties
+
+
 def index(request):
     return render(request, "index.html")
 
 
+def video(request):
+    return render(request, "video.html")
+
+
 def image(request):
     return render(request, "image.html")
+
+
+def pdf(request):
+    return render(request, "pdf.html")
+
+
+#pdf2image for loop
+def runPdf2image(request):
+    global filePdfUrl, inputPdfUrl
+    if request.POST.get('run'):
+        inputPdf = request.FILES['input_pdf'] if 'input_pdf' in request.FILES else None
+        if inputPdf:
+            fs = FileSystemStorage()
+            file = fs.save(inputPdf.name, inputPdf)
+            fileurl = fs.url(file)
+            inputPdfUrl = '../media/' + inputPdf.name
+            fileurl = os.getcwd() + '/media/' + inputPdf.name
+            images = convert_from_path(fileurl)
+            imageurl = []
+            pdfImagesResults=[]
+            for i in range(len(images)):
+                # Save pages as images in the pdf
+                images[i].save(fileurl.strip(".pdf") + 'page' + str(i) + '.jpg', 'JPEG')
+                #This list is used to generate table on pdf.html
+                pageName=inputPdf.name.strip(".pdf") + 'page' + str(i) + '.jpg'
+                imageurl.append('../media/' + pageName)
+                imagefileurl = os.getcwd()  +'/media/'+pageName
+                res = FID().predict_result(imagefileurl)
+                result = {'type': res[0], 'confidence': res[1]}
+                pdfImagesResults.append(result)
+            res=zip(imageurl,pdfImagesResults)
+
+        return render(request, "pdf.html", {'input_pdf': inputPdfUrl, 'pdf_img': res,})
+
+    if request.POST.get('passImage'):
+            global inputImageUrl, inputImage
+            inputImage=''
+            counter = request.POST.get('passImage')
+            inputImageUrl = request.POST.get('image_url-'+counter)
+            return render(request, "image.html",{'input_image': inputImageUrl,})
 
 
 
@@ -136,6 +209,24 @@ def runAnalysis(request):
                 return render(request, "image.html",
                               {'result': result, 'input_image': inputImage, 'metadata': infoDict.items()})
 
+
+def runVideoAnalysis(request):
+    global inputVideoUrl, fileVideoUrl
+    if request.POST.get('run'):
+        input_video = request.FILES['input_video'] if 'input_video' in request.FILES else None
+        if input_video:
+            fs = FileSystemStorage()
+            file = fs.save(input_video.name, input_video)
+            inputVideoUrl = '../media/' + input_video.name
+            fileVideoUrl = os.getcwd() + '/media/' + input_video.name
+            # getProcessingVideo()
+            return render(request, "video.html", {'input_video': inputVideoUrl, })
+
+    if request.POST.get('detect'):
+        properties = get_video_metadata(fileVideoUrl)
+        result = detect_video_forgery(fileVideoUrl)
+        return render(request, "video.html",
+                      {'input_video': inputVideoUrl, 'result': result, 'metadata': properties.items()})
 
 
 def getImages(request):
