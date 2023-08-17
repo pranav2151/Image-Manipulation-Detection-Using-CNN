@@ -5,3 +5,8 @@ Scope and Objective:
 To detect whether the image is manipulated or not.
 To identify the manipulated area in image. 
 To detect the type of image manipulation (splicing/copy-move). 
+
+
+Screenshot:
+
+![Picture1](https://github.com/pranav2151/Image-Manipulation-Detection-Using-CNN/assets/86565193/408fac72-39fc-4d81-ba62-2fad546fba91)
